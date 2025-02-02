@@ -1,7 +1,6 @@
 {
-  "name": "ollamask",
-  "version": "1.0.0",
-  "description": "Data masking tool",
+  "name": "@johanlabs/maltese",
+  "version": "1.1.0",
   "main": "index.js",
   "bin": {
     "maltese": "node ./index.js"
@@ -21,7 +20,10 @@
     "privacy",
     "security"
   ],
-  "author": "",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Johan Labs",
   "license": "ISC",
   "dependencies": {
     "ansi-escapes": "^7.0.0",
