@@ -64,9 +64,22 @@ const { obfuscate } = require('malte');
 obfuscate("Ontem eu fui para Los Angeles"); // "Ontem eu fui para Bagdá"
 ```
 
-Se você é um usuário final e apenas quer usar o Maltese, então você pode simplesmente usar via [Extensão de Navegador]().
+##### via Extensão
 
-*Extensão: O Maltese intercepta e modifica dados sensíveis em tempo real em interações com IAs, manipulando a requisição para proteger a privacidade das informações.*
+*A ideia do Maltese é interceptar e modificar dados sensíveis em tempo real em interações com IAs, manipulando a requisição para proteger a privacidade das informações.*
+
+*A extensão para Maltese ainda está em desenvolvimento.*
+
+##### Ignorando SPDs (Sensive Person Data)
+
+Antes de ofuscar os dados sensíveis de uma String, é feito uma tokenização para dados que devam ser ignorados, tente seguir o Padrão:
+
+```
+maltese run deepkseek-r1:1.5b "Olá, meu nome é {{Lucas Santana}}."
+```
+
+Nesse caso, o valor origianl de ```Lucas Santana``` irá permanecer.
+Obs: Isso irá funcionar via API, via Código e também via Extensão.
 
 #### Arquitetura Simples
 
