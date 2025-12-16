@@ -1,3 +1,5 @@
-const obfuscate = require("./obfuscate");
+const obfuscate = require('./obfuscate');
 
-module.exports = { obfuscate };
+module.exports = {
+  obfuscate
+};

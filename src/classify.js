@@ -1,32 +1,53 @@
 const functions = require('./classify/functions');
-const { classifyTokens, restoreOriginalTokens } = require('./classify/tokens');
+const {
+  classifyTokens,
+  restoreOriginalTokens
+} = require('./classify/tokens');
 
 function classifySensitive(text) {
-    if (typeof text !== 'string') {
-        throw new Error('Param {text} not is String.');
-    }
+  if (typeof text !== 'string' || !text.trim()) {
+    throw new TypeError('Param {text} must be a non-empty string.');
+  }
 
-    const { tokenizedText, tokenMap } = classifyTokens(text);
+  const { tokenizedText, tokenMap } = classifyTokens(text);
 
-    const result = {
-        names: functions.identifyNames(tokenizedText),
-        dates: functions.identifyDates(tokenizedText),
-        times: functions.identifyTimes(tokenizedText),
-        addresses: functions.identifyAddresses(tokenizedText),
-        cities: functions.identifyCities(tokenizedText),
-        personalData: {
-            emails: functions.identifyEmails(tokenizedText),
-            numbers: functions.identifyNumbers(tokenizedText)
-        },
-        credentials: {
-            passwords: functions.identifyPasswords(tokenizedText)
-        },
-        sensitiveDocuments: functions.identifySensitiveDocuments(tokenizedText)
-    };
+  const classified = {
+    names: [],
+    dates: [],
+    times: [],
+    addresses: [],
+    cities: [],
+    personalData: {
+      emails: [],
+      numbers: []
+    },
+    credentials: {
+      passwords: []
+    },
+    sensitiveDocuments: {}
+  };
 
-    return JSON.parse(
-        restoreOriginalTokens(JSON.stringify(result), tokenMap)
-    );
+  classified.names = functions.identifyNames(tokenizedText);
+  classified.dates = functions.identifyDates(tokenizedText);
+  classified.times = functions.identifyTimes(tokenizedText);
+  classified.addresses = functions.identifyAddresses(tokenizedText);
+  classified.cities = functions.identifyCities(tokenizedText);
+
+  classified.personalData.emails =
+    functions.identifyEmails(tokenizedText);
+
+  classified.personalData.numbers =
+    functions.identifyNumbers(tokenizedText);
+
+  classified.credentials.passwords =
+    functions.identifyPasswords(tokenizedText);
+
+  classified.sensitiveDocuments =
+    functions.identifySensitiveDocuments(tokenizedText);
+
+  return JSON.parse(
+    restoreOriginalTokens(JSON.stringify(classified), tokenMap)
+  );
 }
 
 module.exports = classifySensitive;

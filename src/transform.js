@@ -1,60 +1,53 @@
-const faker = require('faker');
+const fakerLib = require('faker');
+
+function tag(value) {
+  return value;
+}
 
 function replaceNumbersInString(input) {
   return input.replace(/\d+/g, (match) => {
-    const randomNumber = faker.datatype.number({ min: 1000000000, max: 9999999999 }).toString().slice(0, match.length);
+    const randomNumber = fakerLib.datatype.number({ min: 1000000000, max: 9999999999 }).toString().slice(0, match.length);
     return randomNumber;
   });
 }
 
-function randomizeSensitive(inputData) {
-  const transformedData = {
-    names: inputData?.names?.map(name => faker.name.firstName()),
+function randomizeSensitive(inputData, mode = 'pseudo') {
+  const isAnon = mode === 'anon';
 
-    dates: inputData?.dates?.map(date => generateFakeDate(date)),
+  return {
+    names: inputData?.names?.map(() => isAnon ? '[NOME]' : fakerLib.name.firstName()),
 
-    times: inputData?.times,
+    dates: inputData?.dates?.map(() => isAnon ? '[DATA]' : generateFakeDate()),
 
-    addresses: inputData?.addresses?.map(address => faker.address.streetName()),
+    times: inputData?.times?.map(() => isAnon ? '[HORA]' : undefined),
 
-    cities: inputData?.cities?.map(() => faker.address.city()),
+    addresses: inputData?.addresses?.map(() => isAnon ? '[ENDERECO]' : fakerLib.address.streetName()),
+
+    cities: inputData?.cities?.map(() => isAnon ? '[CIDADE]' : fakerLib.address.city()),
 
     credentials: {
-      passwords: inputData?.credentials?.passwords?.map(() => faker.internet.password()),
-      creditCards: inputData?.credentials?.creditCards?.map(() => faker.finance.creditCardNumber())
+      passwords: inputData?.credentials?.passwords?.map(() => isAnon ? '[SENHA]' : fakerLib.internet.password())
     },
 
     personalData: {
-      emails: inputData?.personalData?.emails?.map(() => faker.internet.email()),
-      numbers: inputData?.personalData?.numbers?.map((num) => {
-        return replaceNumbersInString(num);
-      })
+      emails: inputData?.personalData?.emails?.map(() => isAnon ? '[EMAIL]' : fakerLib.internet.email()),
+      numbers: inputData?.personalData?.numbers?.map(() => isAnon ? '[NUMERO]' : replaceNumbersInString('[NUMERO]'))
     },
 
     sensitiveDocuments: {
-      nationalId: inputData?.sensitiveDocuments?.nationalId?.map((id) => replaceNumbersInString(id)),
-      passports: inputData?.sensitiveDocuments?.passports?.map((passport) => replaceNumbersInString(passport)),
-      drivingLicenses: inputData?.sensitiveDocuments?.drivingLicenses?.map((license) => replaceNumbersInString(license)),
-      taxIds: inputData?.sensitiveDocuments?.taxIds?.map((taxId) => replaceNumbersInString(taxId)),
-      healthIds: [],
-      otherDocuments: inputData?.sensitiveDocuments?.otherDocuments?.map((doc) => replaceNumbersInString(doc))
+      nationalId: inputData?.sensitiveDocuments?.nationalId?.map(() => '[CPF]'),
+      passports: inputData?.sensitiveDocuments?.passports?.map(() => '[PASSAPORTE]'),
+      drivingLicenses: inputData?.sensitiveDocuments?.drivingLicenses?.map(() => '[CNH]'),
+      taxIds: inputData?.sensitiveDocuments?.taxIds?.map(() => '[CNPJ]'),
+      healthIds: inputData?.sensitiveDocuments?.healthIds?.map(() => '[SAUDE]'),
+      otherDocuments: inputData?.sensitiveDocuments?.otherDocuments?.map(() => '[DOCUMENTO]')
     }
   };
-
-  return transformedData;
 }
 
-function generateFakeDate(date) {
-  const regex = /(\d{2})\/(\d{2})\/(\d{4})/;
-  if (regex.test(date)) {
-    const newDate = faker.date.past();
-    return `${newDate.getDate() < 10 ? '0' : ''}${newDate.getDate()}/${newDate.getMonth() + 1 < 10 ? '0' : ''}${newDate.getMonth() + 1}/${newDate.getFullYear()}`;
-  } else {
-    const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-    const newMonth = monthNames[Math.floor(Math.random() * monthNames.length)];
-    const newYear = faker.date.past().getFullYear();
-    return `${newMonth} de ${newYear}`;
-  }
+function generateFakeDate() {
+  const date = fakerLib.date.past();
+  return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
 }
 
 module.exports = randomizeSensitive;

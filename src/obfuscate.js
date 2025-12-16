@@ -2,23 +2,28 @@ const classifySensitive = require("./classify");
 const replaceSensitive = require("./replace");
 const randomizeSensitive = require("./transform");
 
-function obfuscate(text, ref = false) {
-    const detected = classifySensitive(text);
-    const randomized = randomizeSensitive(detected);
+function obfuscate(text, options = {}) {
+    const {
+        mode = 'pseudo', // 'pseudo' | 'anon'
+        ref = false
+    } = options;
 
-    const obfuscatedText = replaceSensitive(text, detected, randomized);
+    const detected = classifySensitive(text);
+    const transformed = randomizeSensitive(detected, mode);
+
+    const obfuscatedText = replaceSensitive(text, detected, transformed);
 
     const output = {
         original: text,
-        obfuscated: obfuscatedText.replaceAll(/\{{|\}}/g, ''),
-        detected,
-        randomized
+        obfuscated: obfuscatedText.replaceAll(/\{{|\}}/g, '')
     };
 
-    if (ref) output.ref = {
-        detected,
-        randomized
-    };
+    if (ref) {
+        output.ref = {
+            detected,
+            transformed
+        };
+    }
 
     return output;
 }
