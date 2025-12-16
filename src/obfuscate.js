@@ -10,7 +10,9 @@ function obfuscate(text, ref = false) {
 
     const output = {
         original: text,
-        obfuscated: obfuscatedText.replaceAll(/\{{|\}}/g, '')
+        obfuscated: obfuscatedText.replaceAll(/\{{|\}}/g, ''),
+        detected,
+        randomized
     };
 
     if (ref) output.ref = {

@@ -1,16 +1,14 @@
 {
   "name": "johanlabs-maltese",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "main": "index.js",
   "bin": {
     "maltese": "./index.js"
   },
   "scripts": {
     "test": "jest",
-
     "server": "node server.js",
     "server:dev": "nodemon server.js",
-
     "build": "npx babel src --out-dir dist",
     "build:extension": "npm run build && npm run update:extension",
     "update:extension": "npx terser dist/**/*.js --compress --mangle --keep-fnames --pure_getters --output extension/maltese.min.js"
@@ -42,7 +40,7 @@
     "spinnies": "^0.5.1",
     "terminal-kit": "^3.1.2",
     "uuid": "^11.0.5",
-    "validator": "^13.12.0"
+    "validator": "^13.15.23"
   },
   "devDependencies": {
     "@babel/cli": "^7.26.4",
