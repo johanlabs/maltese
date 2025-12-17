@@ -70,7 +70,7 @@ For more details:
 If you are using JavaScript:
 
 ```js
-const { obfuscate } = require('johan-maltese');
+const { obfuscate } = require('johanlabs-maltese');
 
 obfuscate("Yesterday I went to Los Angeles"); // "Yesterday I went to Baghdad"
 ```
