@@ -77,6 +77,14 @@ obfuscate("Yesterday I went to Los Angeles"); // "Yesterday I went to Baghdad"
 
 ---
 
+##### via Johan.Chat
+
+When you install this plugin on your agent, it automatically performs the substitution before inference.
+
+> No configuration is required.
+
+---
+
 ##### via Extension
 
 *The goal of Maltese is to intercept and modify sensitive data in real time during interactions with AI systems, manipulating the request to protect privacy.*
